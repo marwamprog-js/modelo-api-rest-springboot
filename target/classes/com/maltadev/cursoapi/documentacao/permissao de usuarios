@@ -1,0 +1,14 @@
+
+## Burlar o erro de chave duplicada nas permissoes de usuário
+## ao cadastrar novo usuário
+
+/*1 - descobrir o nome da constraint para remover */
+select constraint_name from information_schema.constraint_column_usage where table_name = 'usuarios_role' and column_name = 'role_id'
+and constraint_name <> 'unique_role_user';
+
+/*2 - deletar na constraint */
+alter table usuarios_role drop constraint uk_krvk2qx218dxa3ogdyplk0wxw;
+
+/* 3 - Inserir os acessos padrão para o usuaio novo cadastro */
+insert into usuarios_role (usuario_id, role_id)
+values (26, (select id from role where nome_role = 'ROLE_USER'));
